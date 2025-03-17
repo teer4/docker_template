@@ -1,0 +1,10 @@
+# 写入正确的代理配置
+echo 'export http_proxy="http://127.0.0.1:7897"' >> ~/.bashrc
+echo 'export https_proxy="http://127.0.0.1:7897"' >> ~/.bashrc
+echo 'export all_proxy="http://127.0.0.1:7897"' >> ~/.bashrc
+
+# 立刻加载新的配置
+source ~/.bashrc
+
+# 测试是否能正常访问 Hugging Face
+curl -I https://huggingface.co
