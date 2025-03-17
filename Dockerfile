@@ -8,10 +8,12 @@ RUN echo 'Acquire::AllowInsecureRepositories "true";' > /etc/apt/apt.conf.d/90ig
 
 # 安装 Miniconda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
     rm Miniconda3-latest-Linux-x86_64.sh && \
-    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    /opt/conda/bin/conda clean -afy
+    ln -s /opt/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    /opt/miniconda/bin/conda init bash && \
+    /opt/miniconda/bin/conda clean -afy && \
+    /opt/miniconda/bin/conda --version
 
 RUN apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated wget bzip2 git && \
     rm -rf /var/lib/apt/lists/*
@@ -24,6 +26,7 @@ COPY . /workspace/{project_name}
 
 RUN conda env create -f environment.yaml && conda clean -afy
 
-SHELL ["conda", "run", "--no-capture-output", "-n", "/bin/bash", "-c"]
+#env=name in environment.yaml
+SHELL ["conda", "run", "-n", "env", "/bin/bash", "-c"]
 
 CMD ["bash"]
