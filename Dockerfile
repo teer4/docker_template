@@ -7,6 +7,9 @@ RUN echo 'Acquire::AllowInsecureRepositories "true";' > /etc/apt/apt.conf.d/90ig
 
 RUN wget https://github.com/conda-forge/miniforge/releases/download/24.1.2-0/Mambaforge-24.1.2-0-Linux-x86_64.sh &&     bash Mambaforge-24.1.2-0-Linux-x86_64.sh -b -p /opt/mamba &&     rm Mambaforge-24.1.2-0-Linux-x86_64.sh &&     ln -s /opt/mamba/etc/profile.d/conda.sh /etc/profile.d/conda.sh &&     /opt/mamba/bin/mamba clean -afy
 
+RUN apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated wget bzip2 git && \
+    rm -rf /var/lib/apt/lists/*
+
 ENV PATH=/opt/mamba/bin:$PATH
 
 WORKDIR /workspace
