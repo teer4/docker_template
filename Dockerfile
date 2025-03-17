@@ -1,3 +1,4 @@
+#Notice environment/environments.yaml?
 FROM pytorch/pytorch:1.13.0-cuda11.6-cudnn8-devel
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -12,11 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends --allow-unauthe
 
 ENV PATH=/opt/mamba/bin:$PATH
 
-WORKDIR /workspace
+WORKDIR /workspace/{project_name}
 
-COPY environment.yaml /workspace/environment.yaml
+COPY . /workspace/{project_name}
 
-RUN mamba env create -f /workspace/environment.yaml &&     mamba clean -afy
+RUN mamba env create -f environment.yaml &&     mamba clean -afy
 
 SHELL ["conda", "run", "-n", "env", "/bin/bash", "-c"]
 
