@@ -16,14 +16,14 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 RUN apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated wget bzip2 git && \
     rm -rf /var/lib/apt/lists/*
 
-ENV PATH=/opt/mamba/bin:$PATH
+ENV PATH=/opt/conda/bin:$PATH
 
 WORKDIR /workspace/{project_name}
 
 COPY . /workspace/{project_name}
 
-RUN mamba env create -f environment.yaml &&     mamba clean -afy
+RUN conda env create -f environment.yaml && conda clean -afy
 
-SHELL ["conda", "run", "-n", "env", "/bin/bash", "-c"]
+SHELL ["conda", "run", "--no-capture-output", "-n", "/bin/bash", "-c"]
 
 CMD ["bash"]
