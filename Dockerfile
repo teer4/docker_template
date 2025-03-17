@@ -6,7 +6,12 @@ ENV TZ=Asia/Shanghai
 
 RUN echo 'Acquire::AllowInsecureRepositories "true";' > /etc/apt/apt.conf.d/90ignore-check &&     echo 'Acquire::AllowUnauthenticated "true";' >> /etc/apt/apt.conf.d/90ignore-check &&     sed -i 's|http://archive.ubuntu.com/ubuntu|http://mirrors.aliyun.com/ubuntu|g' /etc/apt/sources.list &&     sed -i 's|http://security.ubuntu.com/ubuntu|http://mirrors.aliyun.com/ubuntu|g' /etc/apt/sources.list &&     rm -f /etc/apt/sources.list.d/cuda* && rm -f /etc/apt/sources.list.d/nvidia* &&     apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated wget bzip2 &&     rm -rf /var/lib/apt/lists/*
 
-RUN wget https://github.com/conda-forge/miniforge/releases/download/24.1.2-0/Mambaforge-24.1.2-0-Linux-x86_64.sh &&     bash Mambaforge-24.1.2-0-Linux-x86_64.sh -b -p /opt/mamba &&     rm Mambaforge-24.1.2-0-Linux-x86_64.sh &&     ln -s /opt/mamba/etc/profile.d/conda.sh /etc/profile.d/conda.sh &&     /opt/mamba/bin/mamba clean -afy
+# 安装 Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+    rm Miniconda3-latest-Linux-x86_64.sh && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    /opt/conda/bin/conda clean -afy
 
 RUN apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated wget bzip2 git && \
     rm -rf /var/lib/apt/lists/*
