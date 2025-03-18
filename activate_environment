@@ -1,0 +1,8 @@
+#activate environment
+#1.execute after entering container
+source /opt/conda/etc/profile.d/conda.sh
+conda activate {environment_name}
+conda info
+
+#2.edting Dockerfile
+CMD ["/bin/bash", "-c", "source /opt/conda/etc/profile.d/conda.sh && conda activate {environment_name} && bash"]
