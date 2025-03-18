@@ -1,0 +1,36 @@
+FROM pytorch/pytorch:1.13.0-cuda11.6-cudnn8-devel
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
+
+# 1️⃣ 换源 + 关闭签名检查
+RUN echo 'Acquire::AllowInsecureRepositories "true";' > /etc/apt/apt.conf.d/90ignore-check && \
+    echo 'Acquire::AllowUnauthenticated "true";' >> /etc/apt/apt.conf.d/90ignore-check && \
+    sed -i 's|http://archive.ubuntu.com/ubuntu|http://mirrors.aliyun.com/ubuntu|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.ubuntu.com/ubuntu|http://mirrors.aliyun.com/ubuntu|g' /etc/apt/sources.list && \
+    rm -f /etc/apt/sources.list.d/cuda* && \
+    rm -f /etc/apt/sources.list.d/nvidia* && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated wget bzip2 git ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# 仅换源 + 重试
+RUN conda config --set remote_max_retries 10 && \
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main && \
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch && \
+    conda config --set show_channel_urls yes && \
+    conda clean -afy
+
+
+# 3️⃣ 复制代码
+WORKDIR /workspace/{project_name}
+COPY . /workspace/{project_name}
+
+# 4️⃣ 创建 Conda 环境
+RUN conda env create -f environment.yaml && conda clean -afy
+
+# 5️⃣ SHELL 默认激活环境
+SHELL ["conda", "run", "-n", "{environment_name}", "/bin/bash", "-c"]
+
+# 6️⃣ 启动容器后执行 bash
+CMD ["bash"]
