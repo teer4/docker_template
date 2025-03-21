@@ -1,0 +1,8 @@
+#operate in container
+export LD_LIBRARY_PATH=/opt/conda/envs/stablesr/lib:$LD_LIBRARY_PATH
+
+export PYTHONPATH=$(pwd):$PYTHONPATH
+
+apt-get update && apt-get install -y libgl1-mesa-glx
+
+apt-get update && apt-get install -y libglib2.0-0 libsm6 libxrender1 libxext6
