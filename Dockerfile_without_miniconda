@@ -1,5 +1,5 @@
 #images from docker or dokerhub
-FROM pytorch/pytorch:1.13.0-cuda11.6-cudnn8-devel
+FROM pytorch/pytorch:2.2.0-cuda11.8-cudnn8-devel
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
